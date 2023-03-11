@@ -1,11 +1,13 @@
-import express from 'express';
-import {mapSort} from './utilities/sort.js'
+const express = require('express');
+const mapSort = require('./utilities/sort.js');
+const ConnectDB = require('./config/mongodb.js');
+const { MONGGO_URL } = require('./config/const.js');
 const app = express();
-const hostname = 'localhost';
-const port = 5000;
+;
+ConnectDB().catch(console.log)
 app.get('/', (req, res) =>{
     res.end("<h1>heloo</h1>")
 })
-app.listen(port,hostname,()=>{
+app.listen(MONGGO_URL.POST,MONGGO_URL.HOST,()=>{
     console.log('listening on port 5000')
 })
