@@ -3,6 +3,7 @@ const mapSort = require('./utilities/sort.js');
 const db=require("./config/mongodb.js")
 const  MONGGO_URL  = require('./config/const.js');
 const Boardmodel = require("./models/board.model")
+const routerBoard = require('./routes/v1')
 db.connectDB().
 then(()=> console.log("successfully to connect database server"))
 .then(()=> server())
@@ -13,9 +14,10 @@ then(()=> console.log("successfully to connect database server"))
  )
 const server =()=>{
     const app = express();
-    app.get('/test', async (req, res) =>{
-        res.end("<h1>heloo</h1>")
-    })
+    // Enable req.body data
+    app.use(express.json())
+    // Use API v1
+    app.use('/v1',routerBoard)
     app.listen(MONGGO_URL.POST,MONGGO_URL.HOST,()=>{
         console.log(`listening on ${MONGGO_URL.HOST} ${MONGGO_URL.POST} `)
     })
