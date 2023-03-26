@@ -2,7 +2,7 @@
   "name": "trello-server-api",
   "version": "1.0.0",
   "description": "my-trello-api",
-  "main": "src/server.js",
+  "main": "server.js",
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
