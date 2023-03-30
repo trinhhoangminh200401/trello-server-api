@@ -1,9 +1,13 @@
 const ColumnModel = require("../models/column.model");
-
+const BoardModel = require("../models/board.model")
+// const CardModel = re
 const createNew = async (data) => {
   try {
-    const result = await ColumnModel.CreateNew(data);
-    return result;
+    const create = await ColumnModel.CreateNew(data);
+    const getNewColumn = await ColumnModel.findOneByid(create.insertedId.toString())
+   await BoardModel.pushColumnOrder(getNewColumn.boardId.toString(),getNewColumn._id.toString())
+   console.log(getNewColumn)
+    return getNewColumn;
   } catch (error) {
     throw new Error(error);
   }

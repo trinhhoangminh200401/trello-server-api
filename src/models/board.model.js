@@ -1,7 +1,8 @@
 const Joi = require("joi");
 const { ObjectId } = require("mongodb");
 const Db = require("../config/mongodb.js");
-
+const ColumnModel = require('./column.model')
+const CardModel = require('./card.model')
 const boardCollectionName = "boards";
 const boardCollectionSchema = Joi.object({
   title: Joi.string().required().min(3).max(30).trim(),
@@ -19,34 +20,63 @@ const createNew = async (data) => {
     const result = await Db.GetDB()
       .collection(boardCollectionName)
       .insertOne(value);
+
     return result;
   } catch (error) {
     throw new Error(error);
   }
 };
-const getFullBoard = async (boardid) => {
+const pushColumnOrder = async (boardId,columnId) =>{
+  try {
+    const result = await  Db.GetDB()
+    .collection(boardCollectionName)
+    . findOneAndUpdate(
+      {_id: new ObjectId(boardId)},
+      {$push:{columnOrder:columnId}},
+      {returnOriginal:false}
+      );
+      return result
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+const getFullBoard = async (boardId) => {
   try {
     const result = await Db.GetDB()
       .collection(boardCollectionName)
       .aggregate([
         {
           $match: {
-            _id: new ObjectId(boardid),
+            _id: new ObjectId(boardId),
           },
         },
         {
           $lookup: {
-            from: "columns",
+            from: ColumnModel.columnCollectionName,
             localField: "_id",
-            foreignField: "boarId",
+            foreignField: "boardId",
             as: "columns",
           },
         },
-      ]).toArray()
-      console.log(result)
-      return result
-  } catch (error) {}
+        {
+          $lookup: {
+            from: CardModel.cardCollectionName,
+            localField: "_id",
+            foreignField: "boardId",
+            as: "cards",
+          },
+        },
+      ])
+      .toArray();
+      // console.log(result[0])
+    return result[0];
+  } catch  {
+
+      throw new Error({msg:"Không tìm thấy Id"}.msg)
+  }
 };
 module.exports = {
   CreateNew: createNew,
+  getFullBoard: getFullBoard,
+  pushColumnOrder:pushColumnOrder
 };
