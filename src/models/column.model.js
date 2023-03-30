@@ -16,13 +16,38 @@ const validateSchema = async (data) => {
     abortEarly: false,
   });
 };
-
+const pushCardOrder = async (columnId,CardId) =>{
+  try {
+    const result = await  Db.GetDB()
+    .collection(columnCollectionName)
+    . findOneAndUpdate(
+      {_id: new ObjectId(columnId)},
+      {$push:{cardOrder:CardId}},
+      {returnOriginal:false}
+      );
+      return result
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+const findOneByid = async (id) => {
+  try {
+    const result = await Db.GetDB()
+      .collection(columnCollectionName)
+      .findOne({ _id: new ObjectId(id) });
+    return result;
+  } catch (error) {}
+};
 const createNew = async (data) => {
   try {
     const value = await validateSchema(data);
+    const insertValue = {
+      ...value,
+      boardId: new ObjectId(value.boardId),
+    };
     const result = await Db.GetDB()
       .collection(columnCollectionName)
-      .insertOne(value);
+      .insertOne(insertValue);
     return result;
   } catch (error) {
     throw new Error(error);
@@ -39,10 +64,11 @@ const update = async (id, data) => {
         {
           $set: data,
         },
-        { returnOriginal: false 
+        {
+          returnOriginal: false,
         }
       );
-     console.log(result.value)
+    
     return result.value;
   } catch (error) {
     throw new Error(error);
@@ -51,4 +77,7 @@ const update = async (id, data) => {
 module.exports = {
   CreateNew: createNew,
   update: update,
+  pushCardOrder:pushCardOrder,
+  findOneByid: findOneByid,
+  columnCollectionName:columnCollectionName,
 };
