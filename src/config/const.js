@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config();
 const MONGGO_URL = {
   MONGGO_URL: process.env.MONGGO_URL,
   HOST: process.env.HOST,
