@@ -16,11 +16,27 @@ const getFullBoard = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await BoardService.getFullBoard(id);
-    return result
+    
+     res.send(result)
   } catch (error) {
     res.status(HttpStatuscode.Internalp_Server).json({
       errors: error.message,
     });
   }
+  
 };
+// const Update = async (req, res) =>{
+//   try {
+//       const { id }=req.params
+//       const result = await BoardService.update(id,req.body)
+//       console.log(result)
+//       res.status(HttpStatuscode.Ok).json(result)
+     
+//   } catch (error) {
+//       console.log(error)
+//       res.status(HttpStatuscode.Internalp_Server).json({
+//           errors: error.message
+//       })
+//   }
+// }
 module.exports = { createNew: createNew, getFullBoard: getFullBoard };

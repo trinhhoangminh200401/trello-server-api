@@ -53,8 +53,15 @@ const createNew = async (data) => {
     throw new Error(error);
   }
 };
+const DeleteColumn =async(id,data)=>{
+  
+} 
 const update = async (id, data) => {
   try {
+    const udpateData ={
+      ...data,
+     boardId:  new ObjectId(data.boardId)
+    }
     const result = await Db.GetDB()
       .collection(columnCollectionName)
       .findOneAndUpdate(
@@ -62,7 +69,7 @@ const update = async (id, data) => {
           _id: new ObjectId(id),
         },
         {
-          $set: data,
+          $set: udpateData,
         },
         {
           returnOriginal: false,
