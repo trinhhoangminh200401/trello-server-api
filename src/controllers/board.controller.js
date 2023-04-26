@@ -15,6 +15,7 @@ const createNew = async (req, res) => {
 const getFullBoard = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(req.params)
     const result = await BoardService.getFullBoard(id);
     
      res.send(result)

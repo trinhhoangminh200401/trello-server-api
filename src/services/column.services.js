@@ -1,6 +1,6 @@
 const ColumnModel = require("../models/column.model");
 const BoardModel = require("../models/board.model")
-// const CardModel = re
+const CardModel = require("../models/card.model")
 const createNew = async (data) => {
   try {
     const create = await ColumnModel.CreateNew(data);
@@ -20,7 +20,9 @@ const update = async (id,data) => {
     }
     if(updatedataNow._id) delete updatedataNow._id
     if(updatedataNow.cards) delete updatedataNow.cards
-
+    if(updatedataNow._destroy){
+          CardModel.DeleteMany(updatedataNow.cardOrder)
+    }
     const result = await ColumnModel.update(id,updatedataNow);
     
     return result;

@@ -44,8 +44,28 @@ const createNew = async (data) => {
     throw new Error(error);
   }
 };
+/**
+ * @param (Array of id string cards id)
+ */
+const DeleteMany=async(id)=>{
+    try {
+      const getId = id.map(i=>new ObjectId(i))
+      const result = await Db.GetDB()
+      .collection(cardCollectionName)
+      .updateMany({
+        _id:{$in:getId}
+
+      },{
+        $set:{_destroy:true}
+      });
+      return result
+    } catch (error) {
+      throw new Error(error);
+    }
+}
 module.exports={
     createNew:createNew,
     findOneByid:findOneByid,
+    DeleteMany:DeleteMany,
     cardCollectionName:cardCollectionName
 }

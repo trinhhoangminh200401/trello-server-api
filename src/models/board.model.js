@@ -48,6 +48,7 @@ const getFullBoard = async (boardId) => {
         {
           $match: {
             _id: new ObjectId(boardId),
+            
           },
         },
         {

@@ -53,9 +53,7 @@ const createNew = async (data) => {
     throw new Error(error);
   }
 };
-const DeleteColumn =async(id,data)=>{
-  
-} 
+
 const update = async (id, data) => {
   try {
     const udpateData ={

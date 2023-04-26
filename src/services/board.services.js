@@ -1,5 +1,5 @@
 const BoardModel = require('../models/board.model')
-
+const CloneDeep = require("lodash")
 const createNew = async(data) =>{
     try {
         const result = await BoardModel.CreateNew(data)
@@ -11,21 +11,24 @@ const createNew = async(data) =>{
 }
 const getFullBoard  = async (boardId) =>{
     try {
+      
         const boards = await BoardModel.getFullBoard(boardId)
-       
-        boards.columns.forEach(column => {
-            column.cards=boards.cards.filter(item=>(
-                item.columnId.toString()  === column._id.toString()       
-            ))
-        });
          if(!boards || !boards.columns){
             throw new Error('Board not found')
         }
+        
+       const cloneboard = CloneDeep.cloneDeep(boards)
+       cloneboard.columns= cloneboard.columns.filter(column => !column._destroy)
         // sort column by columnorder, sort card by cardorder, this step for frontend
         // Remove card data from board
-        delete boards.cards 
-        console.log("boards",boards)
-        return boards
+        cloneboard.columns.forEach(column => {
+            column.cards=cloneboard.cards.filter(item=>(
+                item.columnId.toString()  === column._id.toString()       
+            ))
+        });
+        delete cloneboard.cards 
+        console.log("boards",cloneboard)
+        return cloneboard
     } catch (error) {
         console.log(error)
         throw new Error (error)
